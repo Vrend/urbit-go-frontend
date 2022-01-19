@@ -2,7 +2,9 @@ import { useState } from "react";
 import ConfirmationDialog from "./ConfirmationDialog.js";
 
 function ChallengeEntry(props) {
-  function acceptHandler() {}
+  function acceptHandler() {
+    setChallengeConfirmation(true);
+  }
 
   function declineHandler() {
     setConfirmation(true);
@@ -14,9 +16,11 @@ function ChallengeEntry(props) {
 
   function closeConfirmationDialog() {
     setConfirmation(false);
+    setChallengeConfirmation(false);
   }
 
   const [showConfirmation, setConfirmation] = useState(false);
+  const [acceptChallengeConfirmation, setChallengeConfirmation] = useState(false);
 
   function isOurs() {
     if (props.our === props.challenger) {
@@ -63,6 +67,13 @@ function ChallengeEntry(props) {
               onCancel={closeConfirmationDialog}
               onConfirm={closeConfirmationDialog}
               label="Decline"
+            />
+          )}
+          {acceptChallengeConfirmation && (
+            <ConfirmationDialog
+              onCancel={closeConfirmationDialog}
+              onConfirm={closeConfirmationDialog}
+              label="Accept"
             />
           )}
         </>

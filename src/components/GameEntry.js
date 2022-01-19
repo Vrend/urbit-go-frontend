@@ -1,12 +1,19 @@
 import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import ConfirmationDialog from './ConfirmationDialog.js';
 
 function GameEntry(props) {
 
   const [showConfirmation, setConfirmation] = useState(false);
+  const navigate = useNavigate();
 
   function closeConfirmationDialog() {
     setConfirmation(false);
+  }
+
+  function openGame() {
+    console.log('test');
+    navigate('/game/'+props.id);
   }
 
   function resignHandler() {
@@ -24,7 +31,7 @@ function GameEntry(props) {
         <td>{props.turn}</td>
         <td>
           <div className="btn-group" role="group">
-            <button className="btn btn-outline-primary">Open</button>
+            <button className="btn btn-outline-primary" onClick={openGame}>Open</button>
             <button className="btn btn-outline-danger" onClick={resignHandler}>Resign</button>
           </div>
         </td>
