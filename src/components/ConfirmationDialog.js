@@ -1,5 +1,4 @@
 import { Modal } from "react-bootstrap";
-import { useState } from "react";
 
 function ConfirmationDialog(props) {
   return (
