@@ -12,7 +12,6 @@ function GameEntry(props) {
   }
 
   function openGame() {
-    console.log('test');
     navigate('/game/'+props.id);
   }
 

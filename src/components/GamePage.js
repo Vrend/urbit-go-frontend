@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import Board from './Board.js';
 
 function GamePage() {
   const { id } = useParams();
@@ -12,6 +13,8 @@ function GamePage() {
       <button className="btn btn-danger" onClick={goBack}>
         Exit
       </button>
+      <hr/>
+      <Board/>
     </div>
   );
 }

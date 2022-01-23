@@ -59,7 +59,7 @@ function ChallengeList() {
     <div className="container">
       <h2>My Challenges</h2>
       <button className="btn btn-success" onClick={createChallengeHandler}>Send Challenge</button>
-      {showChallengeForm && <CreateChallenge onCancel={closeChallengeForm}/>}
+      {showChallengeForm && <CreateChallenge onClose={closeChallengeForm}/>}
       <hr />
       <div>
         <table className="table table-hover">

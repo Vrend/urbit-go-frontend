@@ -1,8 +1,33 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
 
 function CreateChallenge(props) {
   const [handicapVal, setHandicapVal] = useState(0);
+  const nameRef = useRef();
+  const shipRef = useRef();
+  const komiRef = useRef();
+  const handicapRef = useRef();
+  const sizeRef = useRef();
+  const orderRef = useRef();
+
+  function submitHandler() {
+
+    const challenge = {
+      name: nameRef.current.value,
+      who: shipRef.current.value,
+      komi: komiRef.current.value,
+      handicap: handicapRef.current.value,
+      size: sizeRef.current.value,
+      order: orderRef.current.value
+    }
+    console.log(challenge);
+    if(challenge.name === '' || challenge.who === '' || challenge.komi === '') {
+      console.log('not filled out');
+    }
+    else {
+      props.onClose();
+    }
+  }
 
   return (
     <Modal show={true}>
@@ -21,6 +46,7 @@ function CreateChallenge(props) {
               id="challenge-name"
               placeholder="Enter game name"
               required
+              ref={nameRef}
             />
           </div>
           <div className="form-group">
@@ -33,6 +59,7 @@ function CreateChallenge(props) {
               id="challenge-who"
               placeholder="Enter ship name"
               required
+              ref={shipRef}
             />
           </div>
           <div className="form-group">
@@ -47,6 +74,7 @@ function CreateChallenge(props) {
               step="0.5"
               defaultValue="7.5"
               required
+              ref={komiRef}
             />
           </div>
           <div className="form-group">
@@ -65,13 +93,14 @@ function CreateChallenge(props) {
               step="1"
               defaultValue="0"
               onChange={(e) => setHandicapVal(e.target.value)}
+              ref={handicapRef}
             />
           </div>
           <div className="form-group">
             <label htmlFor="challenge-boardsize" className="form-label">
               Board Size
             </label>
-            <select className="form-select" id="challenge-boardsize">
+            <select className="form-select" id="challenge-boardsize" ref={sizeRef}>
               <option>19x19</option>
               <option>13x13</option>
               <option>9x9</option>
@@ -81,7 +110,7 @@ function CreateChallenge(props) {
             <label htmlFor="challenge-order" className="form-label">
               Goes First
             </label>
-            <select className="form-select" id="challenge-order">
+            <select className="form-select" id="challenge-order" ref={orderRef}>
               <option>Random</option>
               <option>Challenger</option>
               <option>Challenged</option>
@@ -90,8 +119,8 @@ function CreateChallenge(props) {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-outline-success">Submit</button>
-        <button className="btn btn-outline-secondary" onClick={props.onCancel}>
+        <button className="btn btn-outline-success" onClick={submitHandler}>Submit</button>
+        <button className="btn btn-outline-secondary" onClick={props.onClose}>
           Cancel
         </button>
       </Modal.Footer>

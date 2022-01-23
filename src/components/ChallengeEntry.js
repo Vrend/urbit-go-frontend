@@ -103,7 +103,7 @@ function ChallengeEntry(props) {
         <td>{props.challenged}</td>
         <td>{props.komi}</td>
         <td>{props.handicap}</td>
-        <td>{props.size}</td>
+        <td>{props.size+'x'+props.size}</td>
         <td>{starter}</td>
         {isOurs()}
       </tr>
