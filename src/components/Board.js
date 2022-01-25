@@ -1,19 +1,20 @@
+import {useRef, useState} from 'react';
+
 
 // h are the viewbox's width and height, which is the same since it's a square
 const BoardBack = ({x, y, h}) => (
   <g>
     <rect x={x} y={y} width={h} height={h} fill="#c1ac90"/>
-    <rect x={x+3} y={y+3} width={h-6} height={h-6} stroke="#272727" fill="none" strokeWidth="0.1"/>
   </g>
 );
 
 // Create an array of grid lines based on size of viewbox, and board size
 function buildGridLines(x, y, h, size) {
   let lines = []
-  let gap = h/(size-1);
-  for(let i = 1; i < size-1; i++) {
-    lines.push(<line key={i} x1={x} y1={y+(i*gap)} x2={h} y2={y+(i*gap)} stroke="#272727" strokeWidth="0.1"/>);
-    lines.push(<line key={i+size} x1={x+(i*gap)} y1={y} x2={x+(i*gap)} y2={h} stroke="#272727" strokeWidth="0.1"/>);
+  let gap = (h-6)/(size-1);
+  for(let i = 0; i < size; i++) {
+    lines.push(<line key={i} x1={x} y1={y+(i*gap)} x2={h-3} y2={y+(i*gap)} stroke="#272727" strokeWidth="0.1"/>);
+    lines.push(<line key={i+size+1} x1={x+(i*gap)} y1={y} x2={x+(i*gap)} y2={h-3} stroke="#272727" strokeWidth="0.1"/>);
   }
   return lines;
 }
@@ -24,25 +25,53 @@ const Grid = ({x, y, h, size}) => (
   </g>
 );
 
-const Piece = ({x, y, color}) => (
+const Piece = ({x, y, color, size}) => (
   <g>
-    <circle cx={x} cy={y} r={2.5} fill={color}/>
+    <circle cx={x+3} cy={y+3} r={size === 19 ? 1.75 : (size === 14 ? 2 : 2.25)} fill={color}/>
   </g>
 );
 
 function Board() {
+
+  const svg = useRef();
   const viewHeight = 100;
-  const gap = 97/8;
+  const size = 14;
+  const gap = 94/(size-1);
+  const [pieces, setPieces] = useState([]);
+
+  function placePiece(evt) {
+    const pt = svg.current.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    const svgPt = pt.matrixTransform(svg.current.getScreenCTM().inverse());
+    // console.log('x: '+svgPt.x+', y: '+svgPt.y);
+    for(var i = 0; i < size; i++) {
+      for(var j = 0; j < size; j++) {
+        if(Math.abs(svgPt.x-((gap*i)+3)) <= 2 && Math.abs(svgPt.y-((gap*j)+3)) <= 2) {
+          // console.log(`Place on ${i},${j}`);
+          let temparr = pieces;
+          temparr.push(<Piece key={`${i}-${j}`} x={gap*i} y={gap*j} color='black' size={size}/>);
+          setPieces([...temparr]);
+          // console.log(pieces);
+          return;
+        }
+      }
+    }
+  }
+
   return (
   <div>
-    <svg viewBox={`0 0 ${viewHeight} ${viewHeight}`}>
+    <svg viewBox={`0 0 ${viewHeight} ${viewHeight}`} ref={svg} onClick={placePiece}>
       <BoardBack x={0} y={0} h={viewHeight}/>
-      <Grid x={3} y={3} h={viewHeight-3} size={9}/>
-      <Piece x={3} y={3} color="black"/>
-      <Piece x={gap+3} y={gap+3} color="black"/>
-      <Piece x={gap*2+3} y={gap*2+3} color="white"/>
-      <Piece x={gap*3+3} y={gap*3+3} color="black"/>
-      <Piece x={gap*5+3} y={gap*2+3} color="white"/>
+      <Grid x={3} y={3} h={viewHeight} size={size}/>
+      {pieces}
+      {
+      // <Piece x={3} y={3} color="black" size={size}/>
+      // <Piece x={gap+3} y={gap+3} color="black" size={size}/>
+      // <Piece x={gap*2+3} y={gap*2+3} color="white" size={size}/>
+      // <Piece x={gap*3+3} y={gap*3+3} color="black" size={size}/>
+      // <Piece x={gap*5+3} y={gap*2+3} color="white" size={size}/>
+    }
     </svg>
   </div>
   );
