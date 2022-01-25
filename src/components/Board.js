@@ -50,9 +50,12 @@ function Board() {
         if(Math.abs(svgPt.x-((gap*i)+3)) <= 2 && Math.abs(svgPt.y-((gap*j)+3)) <= 2) {
           // console.log(`Place on ${i},${j}`);
           let temparr = pieces;
+          const id = `${i}-${j}`;
+          if(temparr.filter(e => e.key === id).length > 0) {
+            return;
+          }
           temparr.push(<Piece key={`${i}-${j}`} x={gap*i} y={gap*j} color='black' size={size}/>);
           setPieces([...temparr]);
-          // console.log(pieces);
           return;
         }
       }
@@ -65,13 +68,6 @@ function Board() {
       <BoardBack x={0} y={0} h={viewHeight}/>
       <Grid x={3} y={3} h={viewHeight} size={size}/>
       {pieces}
-      {
-      // <Piece x={3} y={3} color="black" size={size}/>
-      // <Piece x={gap+3} y={gap+3} color="black" size={size}/>
-      // <Piece x={gap*2+3} y={gap*2+3} color="white" size={size}/>
-      // <Piece x={gap*3+3} y={gap*3+3} color="black" size={size}/>
-      // <Piece x={gap*5+3} y={gap*2+3} color="white" size={size}/>
-    }
     </svg>
   </div>
   );
