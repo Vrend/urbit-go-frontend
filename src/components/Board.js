@@ -31,13 +31,15 @@ const Piece = ({x, y, color, size}) => (
   </g>
 );
 
-function Board() {
+function Board(props) {
 
   const svg = useRef();
   const viewHeight = 100;
   const size = 14;
   const gap = 94/(size-1);
   const [pieces, setPieces] = useState([]);
+
+
 
   function placePiece(evt) {
     const pt = svg.current.createSVGPoint();
@@ -54,8 +56,11 @@ function Board() {
           if(temparr.filter(e => e.key === id).length > 0) {
             return;
           }
-          temparr.push(<Piece key={`${i}-${j}`} x={gap*i} y={gap*j} color='black' size={size}/>);
+          //console.log(props.turn_count);
+          let color = props.turn_count%2===1 ? 'black' : 'white';
+          temparr.push(<Piece key={`${i}-${j}`} x={gap*i} y={gap*j} color={color} size={size}/>);
           setPieces([...temparr]);
+          props.set_turn_count(props.turn_count+1);
           return;
         }
       }
@@ -64,7 +69,7 @@ function Board() {
 
   return (
   <div>
-    <svg viewBox={`0 0 ${viewHeight} ${viewHeight}`} ref={svg} onClick={placePiece}>
+    <svg height='75vh' viewBox={`0 0 ${viewHeight} ${viewHeight}`} ref={svg} onClick={placePiece}>
       <BoardBack x={0} y={0} h={viewHeight}/>
       <Grid x={3} y={3} h={viewHeight} size={size}/>
       {pieces}
