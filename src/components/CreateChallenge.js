@@ -20,12 +20,15 @@ function CreateChallenge(props) {
       size: sizeRef.current.value,
       order: orderRef.current.value
     }
-    console.log(challenge);
+    //console.log(challenge);
     if(challenge.name === '' || challenge.who === '' || challenge.komi === '') {
       console.log('not filled out');
     }
+    else if(!challenge.who.startsWith("~")) {
+      console.log('Not a ship');
+    }
     else {
-      props.onClose();
+      props.onSubmit(challenge);
     }
   }
 

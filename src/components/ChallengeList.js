@@ -2,7 +2,7 @@ import {useState} from 'react';
 import ChallengeEntry from "./ChallengeEntry.js";
 import CreateChallenge from "./CreateChallenge.js";
 
-function ChallengeList() {
+function ChallengeList(props) {
 
   const [showChallengeForm, setChallengeForm] = useState(false);
 
@@ -14,52 +14,41 @@ function ChallengeList() {
     setChallengeForm(false);
   }
 
+  function submitChallengeForm(challenge) {
+    setChallengeForm(false);
+    props.send_challenge(challenge);
+  }
 
-  function buildTable() {
-    return (
-      <>
-        <ChallengeEntry
-          our="~zod"
-          name="test game"
-          id=".~2022..34..as3.fdsa..1324"
-          challenger="~zod"
-          challenged="~net"
-          komi={7.5}
-          handicap={0}
-          size={9}
-          starter="challenger"
-        />
-        <ChallengeEntry
-          our="~zod"
-          name="test game 2"
-          id=".~2022..xx..a3s.hfsd..4321"
-          challenger="~dopzod"
-          challenged="~zod"
-          komi={7.5}
-          handicap={0}
-          size={9}
-          starter="random"
-        />
-        <ChallengeEntry
-          our="~zod"
-          name="test game 3"
-          id=".~2022..w4..q81.kljh..9562"
-          challenger="~zod"
-          challenged="~wet"
-          komi={7.5}
-          handicap={0}
-          size={9}
-          starter="challenged"
-        />
-      </>
-    );
+  function buildTable(challenges, our) {
+    var entries = [];
+    var c = 1;
+    for(const challenge of challenges) {
+      entries.push(<ChallengeEntry
+        our={"~"+our}
+        name={challenge['name']}
+        id={challenge['game-id']}
+        challenger={challenge['challenger']}
+        challenged={challenge['challenged']}
+        komi={challenge['komi']}
+        handicap={challenge['handicap']}
+        size={challenge['board-size']}
+        starter={challenge['goes-first']}
+        key={"entry"+c}
+        withdraw_challenge={props.withdraw_challenge}
+        accept_challenge={props.accept_challenge}
+        decline_challenge={props.decline_challenge}
+        />);
+      c += 1;
+    }
+    return(<>{entries}</>);
   }
 
   return (
     <div className="container">
       <h2>My Challenges</h2>
       <button className="btn btn-success" onClick={createChallengeHandler}>Send Challenge</button>
-      {showChallengeForm && <CreateChallenge onClose={closeChallengeForm}/>}
+      <button className="btn btn-primary ms-1" onClick={props.refresh}>Refresh</button>
+      {showChallengeForm && <CreateChallenge onSubmit={submitChallengeForm} onClose={closeChallengeForm}/>}
       <hr />
       <div>
         <table className="table table-hover">
@@ -75,7 +64,7 @@ function ChallengeList() {
               <th scope="col">Starting Player</th>
             </tr>
           </thead>
-          <tbody>{buildTable()}</tbody>
+          <tbody>{buildTable(props.challenges, props.our)}</tbody>
         </table>
       </div>
     </div>

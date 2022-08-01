@@ -19,6 +19,24 @@ function ChallengeEntry(props) {
     setChallengeConfirmation(false);
   }
 
+  function confirmWithdraw() {
+    setConfirmation(false);
+    setChallengeConfirmation(false);
+    props.withdraw_challenge(props.challenged);
+  }
+
+  function confirmDecline() {
+    setConfirmation(false);
+    setChallengeConfirmation(false);
+    props.decline_challenge(props.challenger);
+  }
+
+  function confirmAccept() {
+    setConfirmation(false);
+    setChallengeConfirmation(false);
+    props.accept_challenge(props.challenger);
+  }
+
   const [showConfirmation, setConfirmation] = useState(false);
   const [acceptChallengeConfirmation, setChallengeConfirmation] = useState(false);
 
@@ -37,7 +55,7 @@ function ChallengeEntry(props) {
           {showConfirmation && (
             <ConfirmationDialog
               onCancel={closeConfirmationDialog}
-              onConfirm={closeConfirmationDialog}
+              onConfirm={confirmWithdraw}
               label="Withdrawal"
             />
           )}
@@ -65,14 +83,14 @@ function ChallengeEntry(props) {
           {showConfirmation && (
             <ConfirmationDialog
               onCancel={closeConfirmationDialog}
-              onConfirm={closeConfirmationDialog}
+              onConfirm={confirmDecline}
               label="Decline"
             />
           )}
           {acceptChallengeConfirmation && (
             <ConfirmationDialog
               onCancel={closeConfirmationDialog}
-              onConfirm={closeConfirmationDialog}
+              onConfirm={confirmAccept}
               label="Accept"
             />
           )}
