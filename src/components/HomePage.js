@@ -98,7 +98,6 @@ function HomePage(props) {
   };
 
   let resign_game = async (id) => {
-    console.log(id);
     props.api.poke({
       app: "urbit-go",
       mark: "urbit-go-action",
@@ -108,6 +107,12 @@ function HomePage(props) {
 
   const [challenges, set_challenges] = useState([]);
   const [games, set_games] = useState([]);
+  const [first_load, set_first_load] = useState(false);
+
+  if(!first_load) { // on first load just refresh so its not an empty page
+    refresh();
+    set_first_load(true);
+  }
 
   return (
     <div>

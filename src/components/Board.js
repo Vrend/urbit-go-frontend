@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useRef} from 'react';
 
 
 // h are the viewbox's width and height, which is the same since it's a square
@@ -35,10 +35,18 @@ function Board(props) {
 
   const svg = useRef();
   const viewHeight = 100;
-  const size = 14;
+  const size = props.size;
   const gap = 94/(size-1);
-  const [pieces, setPieces] = useState([]);
+  const pieces = props.board;
 
+  let render_pieces = () => {
+      var piece_arr = [];
+      for(const piece of pieces) {
+        const coords = piece[0].split(" ");
+        piece_arr.push(<Piece key={coords} x={gap*Number(coords[0]-1)} y={gap*Number(coords[1]-1)} color={piece[1]} size={size}/>)
+      }
+      return piece_arr;
+  };
 
 
   function placePiece(evt) {
@@ -50,29 +58,19 @@ function Board(props) {
     for(var i = 0; i < size; i++) {
       for(var j = 0; j < size; j++) {
         if(Math.abs(svgPt.x-((gap*i)+3)) <= 2 && Math.abs(svgPt.y-((gap*j)+3)) <= 2) {
-          // console.log(`Place on ${i},${j}`);
-          let temparr = pieces;
-          const id = `${i}-${j}`;
-          if(temparr.filter(e => e.key === id).length > 0) {
-            return;
-          }
-          //console.log(props.turn_count);
-          let color = props.turn_count%2===1 ? 'black' : 'white';
-          temparr.push(<Piece key={`${i}-${j}`} x={gap*i} y={gap*j} color={color} size={size}/>);
-          setPieces([...temparr]);
-          props.set_turn_count(props.turn_count+1);
-          return;
+          props.move(i+1, j+1);
         }
       }
     }
   }
+
 
   return (
   <div>
     <svg height='75vh' viewBox={`0 0 ${viewHeight} ${viewHeight}`} ref={svg} onClick={placePiece}>
       <BoardBack x={0} y={0} h={viewHeight}/>
       <Grid x={3} y={3} h={viewHeight} size={size}/>
-      {pieces}
+      {render_pieces()}
     </svg>
   </div>
   );

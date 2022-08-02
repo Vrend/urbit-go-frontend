@@ -45,9 +45,9 @@ function ChallengeList(props) {
 
   return (
     <div className="container">
+      <button className="btn btn-primary float-end" onClick={props.refresh}>Refresh</button>
       <h2>My Challenges</h2>
       <button className="btn btn-success" onClick={createChallengeHandler}>Send Challenge</button>
-      <button className="btn btn-primary ms-1" onClick={props.refresh}>Refresh</button>
       {showChallengeForm && <CreateChallenge onSubmit={submitChallengeForm} onClose={closeChallengeForm}/>}
       <hr />
       <div>
