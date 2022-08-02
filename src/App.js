@@ -4,35 +4,12 @@ import HomePage from './components/HomePage.js';
 import GamePage from './components/GamePage.js';
 import Urbit from '@urbit/http-api';
 
-//const EXTERNAL = true;
-
-// if(EXTERNAL)// }
-// else {
-//   const api = new Urbit("");
-// } {
-//const api = new Urbit("");
-
 
 let authenticate = async () => {
     let api = await Urbit.authenticate({ship: "zod", url: "localhost:8080", code: "lidlut-tabwed-pillex-ridrup", verbose: true});
     //api.ship = "zod"
     return api;
 };
-
-
-let get_challenges = async (api) => {
-  return api.scry({
-    app: "urbit-go",
-    path: "/challenges"
-  });
-};
-
-
-
-// }
-// else {
-//   const api = new Urbit("");
-// }
 
 
 function App() {

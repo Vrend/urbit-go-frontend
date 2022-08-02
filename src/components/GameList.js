@@ -1,27 +1,22 @@
 import GameEntry from "./GameEntry.js";
 
-function GameList() {
-  function buildTable() {
-    return (
-      <>
-        <GameEntry
-          name="test game 4"
-          id=".~2022..w4..q81.kljh..0312"
-          host="~zod"
-          black="~zod"
-          white="~net"
-          turn={7}
-        />
-        <GameEntry
-          name="test game 5"
-          id=".~2022..w4..q81.kljh..6098"
-          host="~dopzod"
-          black="~dopzod"
-          white="~zod"
-          turn={2}
-        />
-      </>
-    );
+function GameList(props) {
+  function buildTable(games) {
+    var entries = [];
+    var c = 1;
+    for(const game of games) {
+      entries.push(<GameEntry
+        name={game['name']}
+        id={game['game-id']}
+        host={game['host']}
+        black={game['black']}
+        white={game['white']}
+        turn={game['turn']}
+        key={"game"+c}
+        resign_game={props.resign_game}
+        />);
+    }
+    return(<>{entries}</>)
   }
 
   return (
@@ -40,7 +35,7 @@ function GameList() {
               <th scope="col">Turn</th>
             </tr>
           </thead>
-          <tbody>{buildTable()}</tbody>
+          <tbody>{buildTable(props.games)}</tbody>
         </table>
       </div>
     </div>

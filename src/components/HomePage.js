@@ -17,6 +17,20 @@ let parse_challenges_json = (json) => {
   return challenge_output;
 };
 
+let parse_games_json = (json) => {
+  let games = json['active-games'];
+  var game_output = [];
+  for(var game of games) {
+    game['black'] = "~"+game['black'];
+    game['white'] = "~"+game['white'];
+    game['host'] = "~"+game['host'];
+    game['komi'] = game['komi'].substring(1);
+
+    game_output.push(game);
+  }
+  return game_output;
+}
+
 function HomePage(props) {
 
   let get_challenges = async () => {
@@ -26,8 +40,17 @@ function HomePage(props) {
     });
   };
 
+
+  let get_games = () => {
+    return props.api.scry({
+        app: "urbit-go",
+        path: "/active-games"
+    });
+  };
+
   let refresh = () => {
       get_challenges().then(val => set_challenges(parse_challenges_json(val)));
+      get_games().then(val => set_games(parse_games_json(val)))
   };
 
   let send_challenge = async (challenge) => {
@@ -47,8 +70,7 @@ function HomePage(props) {
       app: "urbit-go",
       mark: "urbit-go-action",
       json: {"challenge":{"name":name, "who": who, "komi": komi, "handicap": handicap, "size": size, "order":order}}
-    });
-    refresh();
+    }).then(refresh());
   };
 
   let withdraw_challenge = async (who) => {
@@ -56,8 +78,7 @@ function HomePage(props) {
       app: "urbit-go",
       mark: "urbit-go-action",
       json: {"withdraw-challenge":{"who": who}}
-    });
-    refresh()
+    }).then(refresh());
   };
 
   let accept_challenge = async (who) => {
@@ -65,8 +86,7 @@ function HomePage(props) {
       app: "urbit-go",
       mark: "urbit-go-action",
       json: {"accept-challenge":{"who": who}}
-    });
-    refresh();
+    }).then(refresh());
   };
 
   let decline_challenge = async (who) => {
@@ -74,11 +94,20 @@ function HomePage(props) {
       app: "urbit-go",
       mark: "urbit-go-action",
       json: {"decline-challenge":{"who": who}}
-    });
-    refresh();
+    }).then(refresh());
   };
 
+  let resign_game = async (id) => {
+    console.log(id);
+    props.api.poke({
+      app: "urbit-go",
+      mark: "urbit-go-action",
+      json: {"resign":{"id": id.toString()}}
+    }).then(refresh());
+  }
+
   const [challenges, set_challenges] = useState([]);
+  const [games, set_games] = useState([]);
 
   return (
     <div>
@@ -92,7 +121,7 @@ function HomePage(props) {
         challenges={challenges}
         our={props.api.ship}/>
       <br />
-      <GameList/>
+      <GameList games={games} resign_game={resign_game}/>
     </div>
   );
 }

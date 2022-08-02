@@ -11,6 +11,11 @@ function GameEntry(props) {
     setConfirmation(false);
   }
 
+  function confirmResign() {
+    setConfirmation(false);
+    props.resign_game(props.id);
+  }
+
   function openGame() {
     navigate('/game/'+props.id);
   }
@@ -34,7 +39,7 @@ function GameEntry(props) {
             <button className="btn btn-outline-danger" onClick={resignHandler}>Resign</button>
           </div>
         </td>
-        {showConfirmation && <ConfirmationDialog onCancel={closeConfirmationDialog} onConfirm={closeConfirmationDialog} label='Resignation'/>}
+        {showConfirmation && <ConfirmationDialog onCancel={closeConfirmationDialog} onConfirm={confirmResign} label='Resignation'/>}
       </tr>
     </>
   );
