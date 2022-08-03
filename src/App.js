@@ -4,17 +4,24 @@ import HomePage from './components/HomePage.js';
 import GamePage from './components/GamePage.js';
 import Urbit from '@urbit/http-api';
 
-
-let authenticate = async () => {
-    let api = await Urbit.authenticate({ship: "zod", url: "localhost:8080", code: "lidlut-tabwed-pillex-ridrup", verbose: true});
-    //api.ship = "zod"
-    return api;
-};
-
+const EXTERNAL_AUTH = false;
 
 function App() {
 
   const [loaded, setLoaded] = useState({'init':false,'api':null});
+
+  let authenticate = async () => {
+      if(EXTERNAL_AUTH) {
+        let api = await Urbit.authenticate({ship: "zod", url: "localhost:8080", code: "lidlut-tabwed-pillex-ridrup", verbose: true});
+        return api;
+      }
+      else {
+        let api = new Urbit("");
+        api.ship = window.ship;
+        console.log("LOAD INTERNAL");
+        return api;
+      }
+  };
 
   useMemo(() => authenticate().then(result => setLoaded({'init':true,'api':result})), []);
 

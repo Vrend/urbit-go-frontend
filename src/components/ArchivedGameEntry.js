@@ -1,5 +1,4 @@
 import {useNavigate} from 'react-router-dom';
-import ConfirmationDialog from './ConfirmationDialog.js';
 
 function ArchivedGameEntry(props) {
 

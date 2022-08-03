@@ -172,7 +172,7 @@ function GamePage(props) {
             {(game.pass >= 2) && (<button className={"btn btn-primary me-5"+((game.deadStones !== null && game.deadStones['ship'] === props.api.ship) ? " disabled" : "")} onClick={submitDeadStones}>Submit</button>)}
             <button className="btn btn-danger" onClick={showResignConfirmation}>Resign</button>
             </div>)}
-            {game.result !== null && (<div className="col-6">
+            {over && (<div className="col-6">
               <h3>Score:</h3>
               <h5>Black: {game.result["black-score"].substring(1)}</h5>
               <h5>White: {game.result["white-score"].substring(1)}</h5>
@@ -190,7 +190,7 @@ function GamePage(props) {
         subscribe_game();
       }
       else {
-        console.log(game.result);
+        set_over(true);
       }
       set_loaded(true);
     }
