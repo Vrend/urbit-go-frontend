@@ -1,6 +1,8 @@
 import ChallengeList from "./ChallengeList.js";
 import GameList from "./GameList.js";
+import ArchivedGameList from "./ArchivedGameList.js"
 import { useState } from "react";
+import { Tabs, Tab } from 'react-bootstrap';
 
 let parse_challenges_json = (json) => {
   let challenges = json['challenges'];
@@ -18,7 +20,7 @@ let parse_challenges_json = (json) => {
 };
 
 let parse_games_json = (json) => {
-  let games = json['active-games'];
+  let games = json['games'];
   var game_output = [];
   for(var game of games) {
     game['black'] = "~"+game['black'];
@@ -26,6 +28,19 @@ let parse_games_json = (json) => {
     game['host'] = "~"+game['host'];
     game['komi'] = game['komi'].substring(1);
 
+    game_output.push(game);
+  }
+  return game_output;
+}
+
+let parse_archived_games_json = (json) => {
+  let games = json['games'];
+  var game_output = [];
+  for(var game of games) {
+    game['black'] = "~"+game['black'];
+    game['white'] = "~"+game['white'];
+    game['komi'] = game['komi'].substring(1);
+    game['result'] = game['result']['result'];
     game_output.push(game);
   }
   return game_output;
@@ -41,16 +56,24 @@ function HomePage(props) {
   };
 
 
-  let get_games = () => {
+  let get_games = async () => {
     return props.api.scry({
         app: "urbit-go",
         path: "/active-games"
     });
   };
 
+  let get_archived_games = async () => {
+    return props.api.scry({
+        app: "urbit-go",
+        path: "/archived-games"
+    });
+  };
+
   let refresh = () => {
       get_challenges().then(val => set_challenges(parse_challenges_json(val)));
-      get_games().then(val => set_games(parse_games_json(val)))
+      get_games().then(val => set_games(parse_games_json(val)));
+      get_archived_games().then(val => set_archived_games(parse_archived_games_json(val)));
   };
 
   let send_challenge = async (challenge) => {
@@ -107,6 +130,7 @@ function HomePage(props) {
 
   const [challenges, set_challenges] = useState([]);
   const [games, set_games] = useState([]);
+  const [archivedGames, set_archived_games] = useState([]);
   const [first_load, set_first_load] = useState(false);
 
   if(!first_load) { // on first load just refresh so its not an empty page
@@ -129,7 +153,17 @@ function HomePage(props) {
         challenges={challenges}
         our={props.api.ship}/>
       <br />
-      <GameList games={games} resign_game={resign_game}/>
+      <div className="container">
+        <h2>My Games</h2>
+        <Tabs defaultActiveKey="first">
+          <Tab eventKey="first" title="Active Games">
+            <GameList games={games} resign_game={resign_game}/>
+          </Tab>
+          <Tab eventKey="two" title="Archived Games">
+            <ArchivedGameList games={archivedGames}/>
+          </Tab>
+        </Tabs>
+      </div>
     </div>
   );
 }

@@ -1,20 +1,20 @@
-import GameEntry from "./GameEntry.js";
+import ArchivedGameEntry from "./ArchivedGameEntry.js";
 
-function GameList(props) {
+function ArchivedGameList(props) {
   function buildTable(games) {
     var entries = [];
     var c = 1;
     for(const game of games) {
-      entries.push(<GameEntry
+      entries.push(<ArchivedGameEntry
         name={game['name']}
         id={game['game-id']}
-        host={game['host']}
         black={game['black']}
         white={game['white']}
         turn={game['turn']}
+        result={game['result']}
         key={"game"+c}
-        resign_game={props.resign_game}
         />);
+      c += 1;
     }
     return(<>{entries}</>)
   }
@@ -26,10 +26,10 @@ function GameList(props) {
             <tr>
               <th scope="col">Name</th>
               <th scope="col">ID</th>
-              <th scope="col">Host</th>
               <th scope="col">Black</th>
               <th scope="col">White</th>
               <th scope="col">Turn</th>
+              <th scope="col">Result</th>
             </tr>
           </thead>
           <tbody>{buildTable(props.games)}</tbody>
@@ -38,4 +38,4 @@ function GameList(props) {
   );
 }
 
-export default GameList;
+export default ArchivedGameList;
