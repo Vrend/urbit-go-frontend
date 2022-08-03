@@ -111,6 +111,9 @@ function HomePage(props) {
 
   if(!first_load) { // on first load just refresh so its not an empty page
     refresh();
+    setInterval(() => {
+        refresh();
+    }, 10000);
     set_first_load(true);
   }
 

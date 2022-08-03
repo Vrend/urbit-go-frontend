@@ -38,12 +38,14 @@ function Board(props) {
   const size = props.size;
   const gap = 94/(size-1);
   const pieces = props.board;
+  const pass = props.pass;
+  const deadStones = props.deadStones;
 
   let render_pieces = () => {
       var piece_arr = [];
       for(const piece of pieces) {
         const coords = piece[0].split(" ");
-        piece_arr.push(<Piece key={coords} x={gap*Number(coords[0]-1)} y={gap*Number(coords[1]-1)} color={piece[1]} size={size}/>)
+        piece_arr.push(<Piece key={coords} x={gap*Number(coords[0]-1)} y={gap*Number(coords[1]-1)} color={(deadStones !== null && deadStones.includes(piece[0])) ? "red" : piece[1]} size={size}/>);
       }
       return piece_arr;
   };
@@ -58,7 +60,18 @@ function Board(props) {
     for(var i = 0; i < size; i++) {
       for(var j = 0; j < size; j++) {
         if(Math.abs(svgPt.x-((gap*i)+3)) <= 2 && Math.abs(svgPt.y-((gap*j)+3)) <= 2) {
-          props.move(i+1, j+1);
+          if(pass < 2) { // place piece
+            props.move(i+1, j+1);
+          }
+          else { // select dead stones
+            const coords = `${i+1} ${j+1}`;
+            if(deadStones !== null && deadStones.includes(coords)) { // unselect stone
+              props.toggle_dead_stone(coords, false);
+            }
+            else if(pieces.map(val => val[0]).includes(coords)){ // select it
+              props.toggle_dead_stone(coords, true);
+            }
+          }
         }
       }
     }
