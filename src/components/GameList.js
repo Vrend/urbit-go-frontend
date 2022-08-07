@@ -15,6 +15,7 @@ function GameList(props) {
         key={"game"+c}
         resign_game={props.resign_game}
         />);
+        c += 1;
     }
     return(<>{entries}</>)
   }

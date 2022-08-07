@@ -4,26 +4,23 @@ import HomePage from './components/HomePage.js';
 import GamePage from './components/GamePage.js';
 import Urbit from '@urbit/http-api';
 
-const EXTERNAL_AUTH = false;
-
-function App() {
+function App(props) {
 
   const [loaded, setLoaded] = useState({'init':false,'api':null});
 
-  let authenticate = async () => {
-      if(EXTERNAL_AUTH) {
+  let authenticate = async (auth_val) => {
+      if(auth_val) {
         let api = await Urbit.authenticate({ship: "zod", url: "localhost:8080", code: "lidlut-tabwed-pillex-ridrup", verbose: true});
         return api;
       }
       else {
         let api = new Urbit("");
         api.ship = window.ship;
-        console.log("LOAD INTERNAL");
         return api;
       }
   };
 
-  useMemo(() => authenticate().then(result => setLoaded({'init':true,'api':result})), []);
+  useMemo(() => authenticate(props.ext_auth).then(result => setLoaded({'init':true,'api':result})), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if(loaded['init']) {
     return(

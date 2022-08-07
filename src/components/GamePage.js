@@ -63,6 +63,9 @@ function GamePage(props) {
           turn: json["turn"],
           result: json["result"]
       });
+      if(json["result"] !== null) {
+        set_over(true);
+      }
   };
 
 
@@ -75,7 +78,7 @@ function GamePage(props) {
 
 
   let subscribe_game = async () => {
-    const sub_id = props.api.subscribe({
+    props.api.subscribe({
       app: "urbit-go",
       path: "/game/active/"+id.toString(),
       err: console.log,
@@ -112,9 +115,6 @@ function GamePage(props) {
         mark: "urbit-go-action",
         json: {"dead-stones":{"id": id.toString(), "stones":game.candidateDeadStones}}
       });
-    }
-    if(game.candidateDeadStones === game.deadStones) { // game will be over
-      set_over(true);
     }
   };
 

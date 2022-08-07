@@ -12,7 +12,7 @@ function ArchivedGameList(props) {
         white={game['white']}
         turn={game['turn']}
         result={game['result']}
-        key={"game"+c}
+        key={"agame"+c}
         />);
       c += 1;
     }
