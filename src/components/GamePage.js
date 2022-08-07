@@ -109,13 +109,11 @@ function GamePage(props) {
   };
 
   let submitDeadStones = async () => {
-    if(game.candidateDeadStones.length > 0) {
-      props.api.poke({
-        app: "urbit-go",
-        mark: "urbit-go-action",
-        json: {"dead-stones":{"id": id.toString(), "stones":game.candidateDeadStones}}
-      });
-    }
+    props.api.poke({
+      app: "urbit-go",
+      mark: "urbit-go-action",
+      json: {"dead-stones":{"id": id.toString(), "stones":game.candidateDeadStones}}
+    });
   };
 
   let toggle_dead_stone = (coords, add) => {
