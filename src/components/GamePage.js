@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Board from './Board.js';
 import ConfirmationDialog from "./ConfirmationDialog.js";
+import History from './History.js';
 
 function GamePage(props) {
   const { id } = useParams();
@@ -161,22 +162,40 @@ function GamePage(props) {
                   toggle_dead_stone={toggle_dead_stone}
                   />
             </div>
-            {game.result === null && (<div className="col-6">
-            {game.pass < 2 && (<h3>Turn: {game.turn}</h3>)}
-            {(game.pass < 2) && (<h3>It is {game.turn%2===1 ? game.black : game.white}'s turn!</h3>)}
-            {(game.pass >= 2) && (deadStonesPrompt())}
+           <div className="col-4">
+            {game.result == null && (<>
+              {game.pass < 2 && (<>
+              <h3>Turn: {game.turn}</h3>
+              <h3>It is {game.turn%2===1 ? game.black : game.white}'s turn!</h3></>
+              )}
+              {(game.pass >= 2) && (deadStonesPrompt())}
+              <br/>
+              {(game.pass < 2) && (<button className="btn btn-primary me-3" onClick={pass}>Pass</button>)}
+              <button className="btn btn-danger" onClick={showResignConfirmation}>Resign</button>
+              {(game.pass >= 2) && (<button className={"btn btn-primary me-5"+((game.deadStones !== null && game.deadStones['ship'] === props.api.ship) ? " disabled" : "")} onClick={submitDeadStones}>Submit</button>)}
+            </>)}
+            {over && (<div className="row">
+              <div className="col">
+                <h4>Score:</h4>
+                <h5>Black: {game.result["black-score"].substring(1)}</h5>
+                <h5>White: {game.result["white-score"].substring(1)}</h5>
+              </div>
+              <div className="col">
+                <h5>Winner: ~{game.result["result"]}!</h5>
+              </div>
+            </div>)}
             <br/>
-            {(game.pass < 2) && (<button className="btn btn-primary me-5" onClick={pass}>Pass</button>)}
-            {(game.pass >= 2) && (<button className={"btn btn-primary me-5"+((game.deadStones !== null && game.deadStones['ship'] === props.api.ship) ? " disabled" : "")} onClick={submitDeadStones}>Submit</button>)}
-            <button className="btn btn-danger" onClick={showResignConfirmation}>Resign</button>
-            </div>)}
-            {over && (<div className="col-6">
-              <h3>Score:</h3>
-              <h5>Black: {game.result["black-score"].substring(1)}</h5>
-              <h5>White: {game.result["white-score"].substring(1)}</h5>
-              <hr/>
-              <h2>THE WINNER IS: ~{game.result["result"]}!</h2>
-            </div>)}
+            <br/>
+            
+              <History
+                black={game.black} 
+                white={game.white} 
+                turn={game.turn} 
+                board={game.board} 
+                history={game.history}>
+              </History>
+            
+           </div> 
           </div>
       </div>
       );
