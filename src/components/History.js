@@ -4,6 +4,7 @@ function History(props) {
         var history_rows = [];
         var turn_count = props.turn - 1;
         var next_turn = history[0];
+        var move_diff = null;
 
         var key_count = 0;
 
@@ -12,7 +13,7 @@ function History(props) {
         }
         
         if(history.length === 1) {
-            var move_diff = Object.keys(history[0].m).length > 0 ? "("+Object.keys(history[0].m)[0].replace(" ", ",")+")" : null;
+            move_diff = Object.keys(history[0].m).length > 0 ? "("+Object.keys(history[0].m)[0].replace(" ", ",")+")" : null;
             history_rows.push(
                 <tr key={"history"+key_count}>
                     <td>{turn_count}</td>
@@ -23,7 +24,7 @@ function History(props) {
 
 
         for(const move of history.slice(1)) {
-            var move_diff = null;
+            move_diff = null;
 
             for(const coord of Object.keys(next_turn.m)) {
                 if(!Object.keys(move.m).includes(coord)) {
