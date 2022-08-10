@@ -84,7 +84,7 @@ function GamePage(props) {
       path: "/game/active/"+id.toString(),
       err: console.log,
       event: parse_game_json,
-      quit: console.log
+      quit: get_game
     }).then(val => set_sub_id(val));
   };
 
@@ -171,8 +171,9 @@ function GamePage(props) {
               {(game.pass >= 2) && (deadStonesPrompt())}
               <br/>
               {(game.pass < 2) && (<button className="btn btn-primary me-3" onClick={pass}>Pass</button>)}
+              
+              {(game.pass >= 2) && (<button className={"btn btn-primary me-3"+((game.deadStones !== null && game.deadStones['ship'] === props.api.ship) ? " disabled" : "")} onClick={submitDeadStones}>Submit</button>)}
               <button className="btn btn-danger" onClick={showResignConfirmation}>Resign</button>
-              {(game.pass >= 2) && (<button className={"btn btn-primary me-5"+((game.deadStones !== null && game.deadStones['ship'] === props.api.ship) ? " disabled" : "")} onClick={submitDeadStones}>Submit</button>)}
             </>)}
             {over && (<div className="row">
               <div className="col">
